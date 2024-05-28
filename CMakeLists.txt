@@ -20,10 +20,12 @@ add_llvm_example(toyc
   parser/AST.cpp
   mlir/MLIRGen.cpp
   mlir/Dialect.cpp
+  mlir/ShapeInferencePass.cpp
   mlir/ToyCombine.cpp
 
   DEPENDS
     ToyOpsIncGen
+    ToyShapeInferenceInterfaceIncGen
     ToyCombineIncGen
   )
 
@@ -32,6 +34,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
 target_link_libraries(toyc
   PRIVATE
     MLIRAnalysis
+    MLIRCastInterfaces
+    MLIRCallInterfaces
     MLIRFunctionInterfaces
     MLIRIR
     MLIRParser
