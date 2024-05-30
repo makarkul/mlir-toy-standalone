@@ -5,6 +5,11 @@ project(mlir-toy LANGUAGES CXX C)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 include(MLIRToy)
 
+# This chapter depends on JIT support enabled.
+if(NOT MLIR_ENABLE_EXECUTION_ENGINE)
+  return()
+endif()
+include_directories(include)
 add_subdirectory(include)
 
 set(LLVM_LINK_COMPONENTS
@@ -52,13 +57,11 @@ target_link_libraries(toyc
     MLIRFunctionInterfaces
     MLIRIR
     MLIRLLVMCommonConversion
-    MLIRLLVMDialect
     MLIRLLVMToLLVMIRTranslation
     MLIRMemRefDialect
     MLIRParser
     MLIRPass
     MLIRSideEffectInterfaces
-    MLIRSupport
     MLIRTargetLLVMIRExport
     MLIRTransforms
     )
