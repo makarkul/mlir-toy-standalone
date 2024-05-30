@@ -8,7 +8,10 @@ include(MLIRToy)
 add_subdirectory(include)
 
 set(LLVM_LINK_COMPONENTS
+  Core
   Support
+  nativecodegen
+  OrcJIT
   )
 
 set(LLVM_TARGET_DEFINITIONS mlir/ToyCombine.td)
@@ -21,6 +24,7 @@ add_llvm_example(toyc
   mlir/MLIRGen.cpp
   mlir/Dialect.cpp
   mlir/LowerToAffineLoops.cpp
+  mlir/LowerToLLVM.cpp
   mlir/ShapeInferencePass.cpp
   mlir/ToyCombine.cpp
 
@@ -33,19 +37,28 @@ add_llvm_example(toyc
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
 get_property(dialect_libs GLOBAL PROPERTY MLIR_DIALECT_LIBS)
+get_property(conversion_libs GLOBAL PROPERTY MLIR_CONVERSION_LIBS)
 get_property(extension_libs GLOBAL PROPERTY MLIR_EXTENSION_LIBS)
 target_link_libraries(toyc
   PRIVATE
     ${dialect_libs}
+    ${conversion_libs}
     ${extension_libs}
     MLIRAnalysis
+    MLIRBuiltinToLLVMIRTranslation
     MLIRCallInterfaces
     MLIRCastInterfaces
+    MLIRExecutionEngine
     MLIRFunctionInterfaces
     MLIRIR
+    MLIRLLVMCommonConversion
+    MLIRLLVMDialect
+    MLIRLLVMToLLVMIRTranslation
+    MLIRMemRefDialect
     MLIRParser
     MLIRPass
     MLIRSideEffectInterfaces
     MLIRSupport
+    MLIRTargetLLVMIRExport
     MLIRTransforms
     )
