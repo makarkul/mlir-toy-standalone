@@ -184,6 +184,7 @@ def FuncOp : Toy_Op<"func", [
     /// Returns the result types of this function.
     ArrayRef<Type> getResultTypes() { return getFunctionType().getResults(); }
 
+    /// Returns the region on the function operation that is callable.
     Region *getCallableRegion() { return &getBody(); }
   }];
 
@@ -267,7 +268,8 @@ def PrintOp : Toy_Op<"print"> {
   }];
 
   // The print operation takes an input tensor to print.
-  let arguments = (ins F64Tensor:$input);
+  // We also allow a F64MemRef to enable interop during partial lowering.
+  let arguments = (ins AnyTypeOf<[F64Tensor, F64MemRef]>:$input);
 
   let assemblyFormat = "$input attr-dict `:` type($input)";
 }

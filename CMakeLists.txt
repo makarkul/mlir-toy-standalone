@@ -20,26 +20,32 @@ add_llvm_example(toyc
   parser/AST.cpp
   mlir/MLIRGen.cpp
   mlir/Dialect.cpp
+  mlir/LowerToAffineLoops.cpp
   mlir/ShapeInferencePass.cpp
   mlir/ToyCombine.cpp
 
   DEPENDS
-    ToyOpsIncGen
-    ToyShapeInferenceInterfaceIncGen
-    ToyCombineIncGen
+  ToyShapeInferenceInterfaceIncGen
+  ToyOpsIncGen
+  ToyCombineIncGen
   )
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
+get_property(dialect_libs GLOBAL PROPERTY MLIR_DIALECT_LIBS)
+get_property(extension_libs GLOBAL PROPERTY MLIR_EXTENSION_LIBS)
 target_link_libraries(toyc
   PRIVATE
+    ${dialect_libs}
+    ${extension_libs}
     MLIRAnalysis
-    MLIRCastInterfaces
     MLIRCallInterfaces
+    MLIRCastInterfaces
     MLIRFunctionInterfaces
     MLIRIR
     MLIRParser
     MLIRPass
     MLIRSideEffectInterfaces
+    MLIRSupport
     MLIRTransforms
     )
